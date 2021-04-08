@@ -17,7 +17,7 @@ module Data.Vector.Map.Fusion
   ) where
 
 import Data.Vector.Fusion.Stream.Monadic as Stream
-import Data.Vector.Fusion.Stream.Size as Stream
+import Data.Vector.Fusion.Bundle as Stream
 
 -- | The state for 'Stream' fusion that is used by 'mergeStreamsWith'.
 --

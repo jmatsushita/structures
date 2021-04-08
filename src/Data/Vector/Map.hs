@@ -163,3 +163,13 @@ search p = go where
           m = l + unsafeShiftR hml 1 + unsafeShiftR hml 6
 {-# INLINE search #-}
 
+showTree :: (Show k, Show a) => Map k a -> String
+showTree (Map m0 la) = Data.Map.Internal.Debug.showTree mv <> go la
+ where
+  go M0                = "0"
+  go (M1 as)           = show as
+  go (M2 as bs _ m)    = "(" <> show as <> "|" <> show bs <> ")-()-" <> showTree m
+  go (M3 as bs cs _ m) = show as <> "-(" <> show as <> "|" <> show bs <> ")-()-" <> showTree m
+
+
+-- toList :: (Ord k, Arrayed k, Arrayed v) => Map k v -> [(k,v)]
