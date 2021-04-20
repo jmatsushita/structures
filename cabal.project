@@ -1,3 +1,4 @@
-packages: . vector adjunctions hybrid-vectors
+-- packages: . vector adjunctions hybrid-vectors lens
+packages: . vector hybrid-vectors lens
 index-state: 2020-06-01T17:47:48Z
 benchmarks: True

@@ -58,6 +58,7 @@ import qualified Data.Foldable as Foldable
 import qualified Data.List as List
 import Data.Vector.Array
 import Data.Vector.Fusion.Stream.Monadic (Stream(..))
+import Data.Vector.Fusion.Bundle.Monadic (Bundle(..))
 import qualified Data.Vector.Fusion.Stream.Monadic as Stream
 import Data.Vector.Fusion.Util
 import qualified Data.Map as Map
@@ -124,12 +125,14 @@ lookup1 k (Chunk ks vs) r
   | otherwise = r
 {-# INLINE lookup1 #-}
 
+
 zips :: (Arrayed k, Arrayed v) => Chunk k v -> Stream Id (k, v)
-zips (Chunk ks vs) = Stream.zip (G.stream ks) (G.stream vs)
+zips (Chunk ks vs) = case ((G.stream ks), (G.stream vs)) of
+  (Bundle keys _ _ _, Bundle vals _ _ _) -> Stream.zip keys vals
 {-# INLINE zips #-}
 
 merge :: (Ord k, Arrayed k, Arrayed v) => Chunk k v -> Chunk k v -> Chunk k v
-merge as bs = case G.unstream $ zips as `Fusion.merge` zips bs of
+merge as bs = case Fusion.unstream $ zips as `Fusion.merge` zips bs of
   V_Pair _ ks vs -> Chunk ks vs
 {-# INLINE merge #-}
 
@@ -137,7 +140,7 @@ merge as bs = case G.unstream $ zips as `Fusion.merge` zips bs of
 insert :: (Ord k, Arrayed k, Arrayed v) => k -> v -> Map k v -> Map k v
 insert k0 v0 (Map m0 xs0)
   | n0 <= _THRESHOLD = Map (Map.insert k0 v0 m0) xs0
-  | otherwise = Map Map.empty $ inserts (Chunk (G.fromListN n0 (Map.keys m0)) (G.fromListN n0 (Foldable.toList m0))) xs0
+  | otherwise = Map (Map.singleton k0 v0) $ inserts (Chunk (G.fromListN n0 (Map.keys m0)) (G.fromListN n0 (Foldable.toList m0))) xs0
  where
   n0 = Map.size m0
   inserts as M0                 = M1 as
@@ -163,13 +166,21 @@ search p = go where
           m = l + unsafeShiftR hml 1 + unsafeShiftR hml 6
 {-# INLINE search #-}
 
-showTree :: (Show k, Show a) => Map k a -> String
-showTree (Map m0 la) = Data.Map.Internal.Debug.showTree mv <> go la
- where
-  go M0                = "0"
-  go (M1 as)           = show as
-  go (M2 as bs _ m)    = "(" <> show as <> "|" <> show bs <> ")-()-" <> showTree m
-  go (M3 as bs cs _ m) = show as <> "-(" <> show as <> "|" <> show bs <> ")-()-" <> showTree m
-
+-- showTree :: (Show k, Show a) => Map k a -> String
+-- showTree (Map m0 la) = Data.Map.Internal.Debug.showTree mv <> go la
+--  where
+--   go M0                = "0"
+--   go (M1 as)           = show as
+--   go (M2 as bs _ m)    = "(" <> show as <> "|" <> show bs <> ")-()-" <> showTree m
+--   go (M3 as bs cs _ m) = show as <> "-(" <> show as <> "|" <> show bs <> ")-()-" <> showTree m
 
 -- toList :: (Ord k, Arrayed k, Arrayed v) => Map k v -> [(k,v)]
+-- toList = []
+
+-- -- range :: k -> k -> Map k v -> Map k v
+-- --                            -> Stream ?
+-- range' :: k -> k -> Map k v -> [(k,v)]
+-- range' = []
+
+-- traversable instance
+-- lens traversal

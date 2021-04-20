@@ -1,6 +1,6 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE RankNTypes  #-}
-{-# LANGUAGE Trustworthy #-}
+-- {-# LANGUAGE Trustworthy #-}
 {-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# OPTIONS_GHC -fno-warn-unused-matches -fno-warn-unused-binds #-}

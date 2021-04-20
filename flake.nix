@@ -128,7 +128,7 @@
         # nativeBuildInputs = [ pkgs.cudatoolkit_10_2 pkgs.cudatoolkit_10_2.lib ];
         buildInputs = with pkgs.haskellPackages; [
           # cabal-install
-          # ghcid
+          ghcid
           # haskell-language-server
           # ormolu
           # hlint
