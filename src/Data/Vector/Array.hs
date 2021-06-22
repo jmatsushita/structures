@@ -49,7 +49,7 @@ import qualified Data.Vector.Primitive as P
 import qualified Data.Vector.Primitive.Mutable as PM
 import qualified Data.Vector.Unboxed as U
 import qualified Data.Vector.Unboxed.Base as UB
-import qualified Data.Vector.Fusion.Bundle as Stream
+import qualified Data.Vector.Fusion.Stream as Stream
 import qualified Data.Vector as B
 import qualified Data.Vector.Mutable as BM
 import Data.Word
